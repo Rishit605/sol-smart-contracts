@@ -1,9 +1,7 @@
 //SPDX-License-Identifier:MIT
 
-pragma solidity ^0.6.0;
+pragma solidity ^0.8.0;
 
- // import "@chainlink/contracts/src/v0.6/interfaces/AggregatorV3Interface.sol";
-    // the above import and the below 'interface AggregatorV3Interface{}' act the same
 interface AggregatorV3Interface {
 
   function decimals()
@@ -73,8 +71,13 @@ contract FundMe {
     function getPrice() public view returns(uint256) {
         AggregatorV3Interface priceFeed = AggregatorV3Interface(0x8A753747A1Fa494EC906cE90E9f37563A8AF630e);
         (,int256 answer,,,) = priceFeed.latestRoundData();
-        // empty commas are for unsed variables and tells solidity to not use them
-        return uint256(answer);
+        return uint256(answer * 10000000000);
         // 2,529.15169988
+    }
+    // 100000000
+    function getConversionRate(uint256 ethAmount) public view returns (uint256) {
+        uint256 ethPrice = getPrice();
+        uint256 ethAmountInUsd = (ethPrice * ethAmount) / 1000000000000000000;
+        return ethAmountInUsd;
     }
 }
